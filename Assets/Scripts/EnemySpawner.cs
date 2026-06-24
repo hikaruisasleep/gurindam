@@ -51,10 +51,10 @@ public class EnemySpawner : MonoBehaviour
         //check for player
         if (playerXf == null)
         {
-            PlayerController playerController = FindFirstObjectByType<PlayerController>();
-            if (playerController != null)
+            Player player = FindFirstObjectByType<Player>();
+            if (player != null)
             {
-                playerXf = playerController.transform;
+                playerXf = player.transform;
             }
             else
             {
@@ -171,13 +171,15 @@ public class EnemySpawner : MonoBehaviour
                 offset = new Vector3(Mathf.Cos(angleArc), 0f, Mathf.Sin(angleArc)) * wave.circleRadius;
                 break;
             case SpawnPattern.Cross:
-                int directionIndex = idx % 4;
-                float stepFactor = (idx / 4) + 1;
-                float dist = wave.crossDistance * stepFactor;
-                if (directionIndex == 0) offset = new Vector3(0f, 0f, dist);       // North
-                else if (directionIndex == 1) offset = new Vector3(dist, 0f, 0f);  // East
-                else if (directionIndex == 2) offset = new Vector3(0f, 0f, -dist); // South
-                else if (directionIndex == 3) offset = new Vector3(-dist, 0f, 0f); // West
+                int axisIndex = idx % 4;
+                float multiplier = (idx / 4) + 1;
+                float dist = multiplier * wave.crossDistance;
+                float rootHalf = 0.70710678f; // 1/sqrt(2) for normalized diagonal vectors
+
+                if (axisIndex == 0)      offset = new Vector3(rootHalf, 0f, rootHalf) * dist;   // NE
+                else if (axisIndex == 1) offset = new Vector3(-rootHalf, 0f, rootHalf) * dist;  // NW
+                else if (axisIndex == 2) offset = new Vector3(rootHalf, 0f, -rootHalf) * dist;  // SE
+                else if (axisIndex == 3) offset = new Vector3(-rootHalf, 0f, -rootHalf) * dist; // SW
                 break;
         }
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour, IDamageable
+public class Player : MonoBehaviour, IDamageable
 {
     InputAction moveAction;
     InputAction dashAction;
@@ -49,6 +49,15 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] private float iframeTimer = 0f;
     public float iframeBlinkFrequency = 15f;
     private Renderer[] playerRenderers;
+    
+    [Header("Player Events")]
+    public UnityEngine.Events.UnityEvent onTakeDamage;
+    public UnityEngine.Events.UnityEvent onDeath;
+
+    // C# event for performance-friendly UI Slider binding
+    public event System.Action<float, float> onHealthChanged;
+
+    public float HealthPercent => (maxHealth > 0f) ? currentHealth / maxHealth : 0f;
 
     [System.Serializable]
     public struct ComboStep
@@ -66,6 +75,12 @@ public class PlayerController : MonoBehaviour, IDamageable
         attackAction = InputSystem.actions.FindAction("Attack");
         currentHealth = maxHealth; // Initialize player health
         playerRenderers = GetComponentsInChildren<Renderer>(); // Cache all player renderers
+
+        // Trigger initial health sync for UI
+        if (onHealthChanged != null)
+        {
+            onHealthChanged.Invoke(currentHealth, maxHealth);
+        }
     }
 
     void Update()
@@ -172,7 +187,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         rb.linearVelocity = new Vector3(newHorizontalVelocity.x, rb.linearVelocity.y, newHorizontalVelocity.z);
 
-        if (moveInput.sqrMagnitude > 0.01f)
+        if (moveInput.sqrMagnitude > 0.01f && activeHurtbox == null)
         {
             transform.rotation = Quaternion.LookRotation(moveInput);
         }
@@ -186,7 +201,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (dashRequested)
         {
             dashRequested = false;
-
+ 
             if (canDash)
             {
                 rb.linearVelocity = Vector3.zero;
@@ -212,7 +227,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             float targetDistance = Mathf.Infinity;
             if (target != null)
             {
-                Vector3 attackDirection = target.position - transform.position;
+                Vector3 attackDirection = target.position - transform.position; // Fixed: Use transform.position so direction doesn't reverse when enemy is close
                 attackDirection.y = 0;
                 attackDirection.Normalize();
 
@@ -236,6 +251,8 @@ public class PlayerController : MonoBehaviour, IDamageable
                     if (prefab != null && spawnPoint != null)
                     {
                         Hurtbox newHurtbox = Instantiate(prefab, spawnPoint);
+
+                        // If the target is closer than the spawnPoint's forward distance, snap the spawn position closer on both X and Z to hit the hugging enemy
                         if (target != null && targetDistance < spawnPoint.localPosition.z)
                         {
                             Vector3 localTargetPos = spawnPoint.InverseTransformPoint(target.position);
@@ -245,7 +262,8 @@ public class PlayerController : MonoBehaviour, IDamageable
                                 localTargetPos.z + newHurtbox.transform.localPosition.z
                             );
                         }
-                        newHurtbox.transform.parent = null;
+
+                        //do not deparent so hurtbox moves with player
                         newHurtbox.Initialize(this.gameObject, newHurtbox.transform.forward);
                         activeHurtbox = newHurtbox;
                     }
@@ -266,7 +284,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         // 1. Scan for all colliders in range
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, targetDetectionRadius, enemyLayer);
-
+        
         Transform bestTarget = null;
         float closestDistance = Mathf.Infinity;
 
@@ -278,6 +296,8 @@ public class PlayerController : MonoBehaviour, IDamageable
             // Verify it's an enemy (implements IDamageable)
             IDamageable damageable = col.GetComponentInParent<IDamageable>();
             if (damageable == null) continue;
+
+            // BUG FIX: Get the root enemy transform instead of the individual collider child transform
             MonoBehaviour enemyMono = damageable as MonoBehaviour;
             Transform enemyTransform = (enemyMono != null) ? enemyMono.transform : col.transform;
 
@@ -314,13 +334,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
                 MonoBehaviour enemyMono = damageable as MonoBehaviour;
                 Transform enemyTransform = (enemyMono != null) ? enemyMono.transform : col.transform;
-
-                // Optional: Line of sight check (uncomment if you want walls to block auto-aim)
-                /*
-                Vector3 start = transform.position + Vector3.up * 1f;
-                Vector3 end = enemyTransform.position + Vector3.up * 1f;
-                if (Physics.Linecast(start, end, LayerMask.GetMask("Obstacles"))) continue;
-                */
 
                 float distance = Vector3.Distance(transform.position, enemyTransform.position);
                 if (distance < closestDistance)
@@ -366,9 +379,22 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (isInvincible) return; // Invincible!
 
         currentHealth -= damageInfo.damage;
+        currentHealth = Mathf.Max(0f, currentHealth); // Clamp health so it doesn't go below 0
         iframeTimer = iframeDuration;
 
         Debug.Log($"Player took {damageInfo.damage} damage from {damageInfo.attacker.name}! HP: {currentHealth}/{maxHealth}");
+
+        // Trigger health changed event
+        if (onHealthChanged != null)
+        {
+            onHealthChanged.Invoke(currentHealth, maxHealth);
+        }
+
+        // Trigger take damage visual/audio feedback event hooks (camera shake, screen flash)
+        if (onTakeDamage != null)
+        {
+            onTakeDamage.Invoke();
+        }
 
         // Apply knockback to player
         if (rb != null && damageInfo.knockbackForce > 0f)
@@ -386,7 +412,10 @@ public class PlayerController : MonoBehaviour, IDamageable
     private void Die()
     {
         Debug.Log("Player has died!");
-        // Optional: reload the scene or disable player controls
+        if (onDeath != null)
+        {
+            onDeath.Invoke();
+        }
     }
 
     private void SetRenderersEnabled(bool enabledState)
