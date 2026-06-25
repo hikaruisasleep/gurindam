@@ -1,5 +1,8 @@
 # The Origin of Gurindam
 
+[![unity](https://img.shields.io/badge/Unity-100000?style=for-the-badge&logo=unity&logoColor=white)](https://unity3d.com)
+![GitHub top language](https://img.shields.io/github/languages/top/hikaruisasleep/gurindam?style=for-the-badge)
+
 ## Overview
 The Origin of Gurindam is a 3D action roguelite hack-and-slash game developed in Unity. This project serves as an academic final project focused on integrating Malay cultural preservation with modern game design methodologies. Players assume the role of "The Scholar," navigating a historic fantasy world threatened by a dark fog of forgetfulness. By retrieving shattered fragments of the Gurindam Dua Belas, players fight to preserve the history and culture of the Malay Sultanate.
 
