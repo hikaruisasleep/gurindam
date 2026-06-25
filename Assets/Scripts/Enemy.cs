@@ -5,7 +5,8 @@ public class Enemy : MonoBehaviour, IDamageable
 {
     [Header("Stats")]
     public float maxHealth = 50f;
-    private float currentHealth;
+    [SerializeField] private float currentHealth;
+    public float CurrentHealth => currentHealth;
     public float contactDamage = 10f;
     [Header("Visual Feedback")]
     public Renderer modelRenderer;

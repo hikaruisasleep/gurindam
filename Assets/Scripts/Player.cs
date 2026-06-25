@@ -6,9 +6,36 @@ public class Player : MonoBehaviour, IDamageable
     InputAction moveAction;
     InputAction dashAction;
     InputAction attackAction;
+    InputAction altAttackAction;
+    InputAction skillAction;
+    InputAction ultimateAction;
+    InputAction interactAction;
 
     public Rigidbody rb;
 
+    [Header("Ranged Attack (Alt-Attack)")]
+    public Hurtbox rangedAttackPrefab;
+    public LineRenderer aimLineRenderer;
+    public LineRenderer aimGhostLineRenderer;
+    public float chargedAttackDuration = 0.5f;
+    public float rangedAttackRange = 10f;
+    public Color chargingColor = Color.red;
+    public Color chargedColor = Color.green;
+    public Color ghostLineColor = new Color(0.5f, 0.5f, 0.5f, 0.2f);
+    [Header("Ranged Aim Movement Modifiers")]
+    public float rangedAimSpeedMultiplier = 0.4f;
+    public float rangedAimDecelMultiplier = 0.3f;
+    [Header("Ranged Aim Camera Zoom")]
+    public Unity.Cinemachine.CinemachineCamera virtualCamera;
+    public float rangedAimCameraZoomSizeAdd = 1.5f;
+    public float cameraZoomInSpeed = 8f;
+    private float defaultCameraSize = 5f;
+    [SerializeField] private float currentZoomPercent = 0f;
+    [SerializeField] private bool isAimingRanged = false;
+    [SerializeField] private float altAttackHoldStartTime = 0f;
+    private float zoomResetStartPercent = 0f;
+    private float zoomInProgress = 1f;
+    private bool wasAimingRanged = false;
 
     [Header("Movement")]
     public float maxSpeed = 5.0f;
@@ -48,6 +75,7 @@ public class Player : MonoBehaviour, IDamageable
     public LayerMask enemyLayer;
     [Range(0f, 1f)]
     public float targetConeThreshold = 0f;
+    public float targetDistanceTolerance = 2.0f;
 
     [Header("Player Health & I-Frames")]
     public float maxHealth = 100f;
@@ -56,7 +84,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float iframeTimer = 0f;
     public float iframeBlinkFrequency = 15f;
     private Renderer[] playerRenderers;
-    
+
     [Header("Player State")]
     [SerializeField] private bool controlsEnabled = true;
 
@@ -83,15 +111,28 @@ public class Player : MonoBehaviour, IDamageable
         moveAction = InputSystem.actions.FindAction("Move");
         dashAction = InputSystem.actions.FindAction("Dash");
         attackAction = InputSystem.actions.FindAction("Attack");
+        altAttackAction = InputSystem.actions.FindAction("AltAttack");
+        skillAction = InputSystem.actions.FindAction("Skill");
+        ultimateAction = InputSystem.actions.FindAction("Ultimate");
+        interactAction = InputSystem.actions.FindAction("Interact");
         currentHealth = maxHealth; // Initialize player health
         playerRenderers = GetComponentsInChildren<Renderer>(); // Cache all player renderers
         controlsEnabled = true;
+
+        if (virtualCamera != null)
+        {
+            defaultCameraSize = virtualCamera.Lens.OrthographicSize;
+        }
 
         // Trigger initial health sync for UI
         if (onHealthChanged != null)
         {
             onHealthChanged.Invoke(currentHealth, maxHealth);
         }
+
+        // hide aim line on game start
+        aimLineRenderer.enabled = false;
+        aimLineRenderer.positionCount = 0;
     }
 
     void Update()
@@ -132,6 +173,138 @@ public class Player : MonoBehaviour, IDamageable
             attackRequested = false;
         }
 
+        if (controlsEnabled && skillAction != null && skillAction.WasPressedThisFrame())
+        {
+            Debug.Log("Skill Cast pressed!");
+        }
+        if (controlsEnabled && ultimateAction != null && ultimateAction.WasPressedThisFrame())
+        {
+            Debug.Log("Ultimate Cast pressed!");
+        }
+        if (controlsEnabled && interactAction != null && interactAction.WasPressedThisFrame())
+        {
+            Debug.Log("Interact Action pressed!");
+        }
+
+        if (controlsEnabled && altAttackAction != null && altAttackAction.WasPressedThisFrame())
+        {
+            isAimingRanged = true;
+            altAttackHoldStartTime = Time.time;
+            if (aimLineRenderer != null)
+            {
+                aimLineRenderer.positionCount = 2;
+                aimLineRenderer.enabled = true;
+            }
+            if (aimGhostLineRenderer != null)
+            {
+                aimGhostLineRenderer.positionCount = 2;
+                aimGhostLineRenderer.enabled = true;
+            }
+        }
+
+        if (isAimingRanged && altAttackAction != null)
+        {
+            Vector3 mouseWorldPos = GetMouseWorldPosition();
+            Vector3 playerFootPos = transform.position;
+            Vector3 aimDir = mouseWorldPos - playerFootPos;
+            aimDir.y = 0;
+            aimDir.Normalize();
+            if (aimDir == Vector3.zero)
+            {
+                aimDir = transform.forward;
+            }
+
+            Vector3 targetAimPos = playerFootPos + aimDir * rangedAttackRange;
+            float chargePercent = chargedAttackDuration > 0f ? Mathf.Clamp01((Time.time - altAttackHoldStartTime) / chargedAttackDuration) : 1f;
+            bool isCharged = chargePercent >= 1.0f;
+
+            if (aimGhostLineRenderer != null)
+            {
+                aimGhostLineRenderer.SetPosition(0, playerFootPos);
+                aimGhostLineRenderer.SetPosition(1, targetAimPos);
+
+                Color currentGhostColor = isCharged ? chargedColor : ghostLineColor;
+                aimGhostLineRenderer.startColor = currentGhostColor;
+                aimGhostLineRenderer.endColor = currentGhostColor;
+            }
+
+            if (aimLineRenderer != null)
+            {
+                Vector3 currentTargetPos = Vector3.Lerp(playerFootPos, targetAimPos, chargePercent);
+                Vector3 yOffset = Vector3.up * 0.01f;
+                aimLineRenderer.SetPosition(0, playerFootPos + yOffset);
+                aimLineRenderer.SetPosition(1, currentTargetPos + yOffset);
+
+                Color currentColor = isCharged ? chargedColor : chargingColor;
+                aimLineRenderer.startColor = currentColor;
+                aimLineRenderer.endColor = currentColor;
+            }
+
+            // Face the aiming direction
+            transform.rotation = Quaternion.LookRotation(aimDir);
+
+            if (!altAttackAction.IsPressed()) // Released
+            {
+                isAimingRanged = false;
+                if (aimLineRenderer != null)
+                {
+                    aimLineRenderer.enabled = false;
+                    aimLineRenderer.positionCount = 0;
+                }
+                if (aimGhostLineRenderer != null)
+                {
+                    aimGhostLineRenderer.enabled = false;
+                    aimGhostLineRenderer.positionCount = 0;
+                }
+
+                if (Time.time - altAttackHoldStartTime >= chargedAttackDuration)
+                {
+                    FireRangedAttack(targetAimPos);
+                }
+                else
+                {
+                    Debug.Log($"Ranged attack cancelled: charged for {Time.time - altAttackHoldStartTime:F2}s (minimum is {chargedAttackDuration}s).");
+                }
+            }
+        }
+
+        // Zooming out: Coupled with the charge duration (chargedAttackDuration)
+        if (isAimingRanged)
+        {
+            currentZoomPercent = chargedAttackDuration > 0f ? Mathf.Clamp01((Time.time - altAttackHoldStartTime) / chargedAttackDuration) : 1f;
+            wasAimingRanged = true;
+        }
+        // Zooming in (reset): Decoupled from charge duration for a fast and snappy snapback using cubic ease-out
+        else
+        {
+            if (wasAimingRanged)
+            {
+                wasAimingRanged = false;
+                zoomResetStartPercent = currentZoomPercent;
+                zoomInProgress = 0f;
+            }
+
+            if (zoomInProgress < 1f)
+            {
+                zoomInProgress = Mathf.Min(1f, zoomInProgress + cameraZoomInSpeed * Time.deltaTime);
+                float t = zoomInProgress;
+                float easedProgress = 1f - (1f - t) * (1f - t) * (1f - t); // Cubic Ease-Out
+                currentZoomPercent = Mathf.Lerp(zoomResetStartPercent, 0f, easedProgress);
+            }
+            else
+            {
+                currentZoomPercent = 0f;
+            }
+        }
+
+        if (virtualCamera != null)
+        {
+            float targetSize = Mathf.Lerp(defaultCameraSize, defaultCameraSize + rangedAimCameraZoomSizeAdd, currentZoomPercent);
+            var lens = virtualCamera.Lens;
+            lens.OrthographicSize = targetSize;
+            virtualCamera.Lens = lens;
+        }
+
         // Count down i-frame timer & handle visual blinking
         if (iframeTimer > 0f)
         {
@@ -165,13 +338,14 @@ public class Player : MonoBehaviour, IDamageable
 
 
         Vector3 moveInput = (forward * moveValue.y) + (right * moveValue.x);
-        Vector3 targetVelocity = moveInput * maxSpeed;
+        float activeMaxSpeed = isAimingRanged ? (maxSpeed * rangedAimSpeedMultiplier) : maxSpeed;
+        Vector3 targetVelocity = moveInput * activeMaxSpeed;
 
         Vector3 currentHorizontalVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
 
         Vector3 newHorizontalVelocity;
 
-        if (currentHorizontalVelocity.magnitude > maxSpeed)
+        if (currentHorizontalVelocity.magnitude > activeMaxSpeed)
         {
             if (moveInput.sqrMagnitude > 0.01f && activeHurtbox == null)
             {
@@ -196,7 +370,7 @@ public class Player : MonoBehaviour, IDamageable
                     // Decelerate the magnitude down towards the walking maxSpeed
                     newHorizontalVelocity = Vector3.MoveTowards(
                         rotatedVelocity,
-                        inputDir * maxSpeed,
+                        inputDir * activeMaxSpeed,
                         dashDeceleration * Time.fixedDeltaTime
                     );
                 }
@@ -210,13 +384,14 @@ public class Player : MonoBehaviour, IDamageable
         else
         {
             // Standard walking physics
-            float currentAccel = (currentHorizontalVelocity.sqrMagnitude > targetVelocity.sqrMagnitude) ? deceleration : acceleration;
+            float activeDecel = isAimingRanged ? (deceleration * rangedAimDecelMultiplier) : deceleration;
+            float currentAccel = (currentHorizontalVelocity.sqrMagnitude > targetVelocity.sqrMagnitude) ? activeDecel : acceleration;
             newHorizontalVelocity = Vector3.MoveTowards(currentHorizontalVelocity, targetVelocity, currentAccel * Time.fixedDeltaTime);
         }
 
         rb.linearVelocity = new Vector3(newHorizontalVelocity.x, rb.linearVelocity.y, newHorizontalVelocity.z);
 
-        if (moveInput.sqrMagnitude > 0.01f && activeHurtbox == null)
+        if (moveInput.sqrMagnitude > 0.01f && activeHurtbox == null && !isAimingRanged)
         {
             transform.rotation = Quaternion.LookRotation(moveInput);
         }
@@ -230,9 +405,26 @@ public class Player : MonoBehaviour, IDamageable
         if (dashRequested)
         {
             dashRequested = false;
- 
+
             if (canDash)
             {
+                // Cancel ranged aiming on dash
+                if (isAimingRanged)
+                {
+                    isAimingRanged = false;
+                    if (aimLineRenderer != null)
+                    {
+                        aimLineRenderer.enabled = false;
+                        aimLineRenderer.positionCount = 0;
+                    }
+                    if (aimGhostLineRenderer != null)
+                    {
+                        aimGhostLineRenderer.enabled = false;
+                        aimGhostLineRenderer.positionCount = 0;
+                    }
+                    Debug.Log("Ranged attack cancelled: player dashed.");
+                }
+
                 rb.linearVelocity = Vector3.zero;
                 rb.AddForce(dashDirection.normalized * dashForce, ForceMode.Impulse);
                 lastDashTime = Time.time;
@@ -322,60 +514,83 @@ public class Player : MonoBehaviour, IDamageable
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, targetDetectionRadius, enemyLayer);
         
         Transform bestTarget = null;
-        float closestDistance = Mathf.Infinity;
+        float bestDistance = Mathf.Infinity;
 
-        // Use the player's input direction if moving, otherwise use character's facing direction
-        Vector3 searchDirection = moveInput != Vector3.zero ? moveInput.normalized : transform.forward;
+        // Use the mouse direction relative to the player as the search direction
+        Vector3 mouseWorldPos = GetMouseWorldPosition();
+        Vector3 searchDirection = mouseWorldPos - transform.position;
+        searchDirection.y = 0;
+        searchDirection.Normalize();
+        if (searchDirection == Vector3.zero)
+        {
+            searchDirection = transform.forward;
+        }
 
         foreach (Collider col in hitColliders)
         {
-            // Verify it's an enemy (implements IDamageable)
+            // Verify it's an enemy (implements IDamageable and has Enemy component)
             IDamageable damageable = col.GetComponentInParent<IDamageable>();
             if (damageable == null) continue;
 
-            // BUG FIX: Get the root enemy transform instead of the individual collider child transform
-            MonoBehaviour enemyMono = damageable as MonoBehaviour;
-            Transform enemyTransform = (enemyMono != null) ? enemyMono.transform : col.transform;
+            Enemy enemy = col.GetComponentInParent<Enemy>();
+            if (enemy == null) continue;
+
+            Transform enemyTransform = enemy.transform;
 
             Vector3 toEnemy = enemyTransform.position - transform.position;
             toEnemy.y = 0; // Keep math on the horizontal plane
             float distance = toEnemy.magnitude;
 
+            // Line of sight check
+            Vector3 start = transform.position + Vector3.up * 1f; // Eyes level
+            Vector3 end = enemyTransform.position + Vector3.up * 1f; // Target center
+            if (Physics.Linecast(start, end, LayerMask.GetMask("Obstacles"))) continue;
+
             // Calculate alignment between our search direction and the enemy direction
             float alignment = Vector3.Dot(searchDirection, toEnemy.normalized);
+            bool inCone = alignment >= targetConeThreshold;
 
-            // Check if the enemy is within our targeting cone
-            if (alignment >= targetConeThreshold)
+            if (bestTarget == null)
             {
-                // Line of sight check
-                Vector3 start = transform.position + Vector3.up * 1f; // Eyes level
-                Vector3 end = enemyTransform.position + Vector3.up * 1f; // Target center
-                if (Physics.Linecast(start, end, LayerMask.GetMask("Obstacles"))) continue;
+                bestTarget = enemyTransform;
+                bestDistance = distance;
+                continue;
+            }
 
-                if (distance < closestDistance)
+            Enemy bestEnemy = bestTarget.GetComponent<Enemy>();
+            Vector3 toBest = bestTarget.position - transform.position;
+            toBest.y = 0;
+            float bestAlignment = Vector3.Dot(searchDirection, toBest.normalized);
+            bool bestInCone = bestAlignment >= targetConeThreshold;
+
+            // 1. Aim direction cone (highest priority)
+            if (inCone != bestInCone)
+            {
+                if (inCone)
                 {
-                    closestDistance = distance;
                     bestTarget = enemyTransform;
+                    bestDistance = distance;
+                }
+                continue;
+            }
+
+            // 2. Distance check with tolerance for health prioritization
+            float distanceDifference = distance - bestDistance;
+            if (Mathf.Abs(distanceDifference) < targetDistanceTolerance)
+            {
+                // 3. Enemy health (lowest priority)
+                if (enemy.CurrentHealth < bestEnemy.CurrentHealth)
+                {
+                    bestTarget = enemyTransform;
+                    bestDistance = distance;
                 }
             }
-        }
-
-        // Fallback: If no enemies are in our forward cone, find the absolute closest enemy in any direction
-        if (bestTarget == null)
-        {
-            foreach (Collider col in hitColliders)
+            else
             {
-                IDamageable damageable = col.GetComponentInParent<IDamageable>();
-                if (damageable == null) continue;
-
-                MonoBehaviour enemyMono = damageable as MonoBehaviour;
-                Transform enemyTransform = (enemyMono != null) ? enemyMono.transform : col.transform;
-
-                float distance = Vector3.Distance(transform.position, enemyTransform.position);
-                if (distance < closestDistance)
+                if (distance < bestDistance)
                 {
-                    closestDistance = distance;
                     bestTarget = enemyTransform;
+                    bestDistance = distance;
                 }
             }
         }
@@ -488,6 +703,39 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
         return 0;
+    }
+
+    private Vector3 GetMouseWorldPosition()
+    {
+        if (Camera.main == null) return transform.position + transform.forward;
+        Vector2 screenMousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : (Vector2)Input.mousePosition;
+        Ray ray = Camera.main.ScreenPointToRay(screenMousePos);
+        Plane plane = new Plane(Vector3.up, transform.position);
+        if (plane.Raycast(ray, out float enter))
+        {
+            return ray.GetPoint(enter);
+        }
+        return transform.position + transform.forward;
+    }
+
+    private void FireRangedAttack(Vector3 targetPosition)
+    {
+        if (rangedAttackPrefab == null) return;
+
+        Vector3 spawnPos = spawnPoint != null ? spawnPoint.position : transform.position;
+        Vector3 fireDir = targetPosition - spawnPos;
+        fireDir.y = 0;
+        fireDir.Normalize();
+
+        if (fireDir == Vector3.zero)
+        {
+            fireDir = transform.forward;
+        }
+
+        Hurtbox projectile = Instantiate(rangedAttackPrefab, spawnPos, Quaternion.LookRotation(fireDir));
+        projectile.Initialize(gameObject, fireDir);
+
+        Debug.Log("Fired Ranged Attack (Inscribed Gurindam) towards: " + targetPosition);
     }
     #endregion
 }
