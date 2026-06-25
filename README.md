@@ -23,8 +23,8 @@ The project is built on the Unity Engine using C# for all gameplay logic and sys
 
 ## Licensing
 
-![Code License](https://img.shields.io/github/license/hikaruisasleep/gurindam?style=for-the-badge&label=code))
-![Assets License](https://img.shields.io/badge/CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge&logo=creative-commons&label=assets)
+[![Code License](https://img.shields.io/badge/GNU%20GPL%203.0-lightgrey?style=for-the-badge&logo=gplv3&logoColor=white&logoSize=auto&label=assets)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![Assets License](https://img.shields.io/badge/CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge&logo=creative-commons&label=assets)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 This project utilizes a split-license model to protect cultural and artistic assets while allowing the software architecture to remain open source.
 The codebase and C# scripts are licensed under the MIT License. See the `LICENSE` file for more details. 
