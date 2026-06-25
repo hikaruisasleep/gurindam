@@ -18,12 +18,19 @@ public class Player : MonoBehaviour, IDamageable
     public float dashCooldown = 1.0f;
     public float dashDeceleration = 70.0f;
     public float dashTurnSpeed = 4.0f;
-    public float dashDuration = 0.2f; // Active phasing/invincibility time
+    [UnityEngine.Serialization.FormerlySerializedAs("dashDuration")]
+    public float dashInvincibilityDuration = 0.2f; // Active phasing/invincibility time
     [SerializeField] private float lastDashTime = -99f;
     [SerializeField] bool isMoving = false;
     [SerializeField] bool canDash = false;
     [SerializeField] private float dashCooldownTimer = 0f;
     private bool dashRequested = false;
+
+    [Header("Double Dash Options")]
+    public bool doubleDash = false;
+    [SerializeField] private int dashesUsed = 0;
+    [SerializeField] private float firstDashTime = -99f;
+    [SerializeField] private float cooldownStartTime = -99f;
 
     [Header("Attacking")]
     public ComboStep[] normalAttackCombo;
@@ -50,6 +57,9 @@ public class Player : MonoBehaviour, IDamageable
     public float iframeBlinkFrequency = 15f;
     private Renderer[] playerRenderers;
     
+    [Header("Player State")]
+    [SerializeField] private bool controlsEnabled = true;
+
     [Header("Player Events")]
     public UnityEngine.Events.UnityEvent onTakeDamage;
     public UnityEngine.Events.UnityEvent onDeath;
@@ -75,6 +85,7 @@ public class Player : MonoBehaviour, IDamageable
         attackAction = InputSystem.actions.FindAction("Attack");
         currentHealth = maxHealth; // Initialize player health
         playerRenderers = GetComponentsInChildren<Renderer>(); // Cache all player renderers
+        controlsEnabled = true;
 
         // Trigger initial health sync for UI
         if (onHealthChanged != null)
@@ -85,17 +96,35 @@ public class Player : MonoBehaviour, IDamageable
 
     void Update()
     {
-        dashCooldownTimer = Mathf.Max(0f, dashCooldown - (Time.time - lastDashTime));
+        dashCooldownTimer = Mathf.Max(0f, dashCooldown - (Time.time - cooldownStartTime));
 
-        if (dashAction.WasPressedThisFrame())
+        // Reset dashes count if cooldown timer finished
+        int maxDashes = doubleDash ? 2 : 1;
+        if (dashesUsed >= maxDashes && dashCooldownTimer <= 0f)
+        {
+            dashesUsed = 0;
+        }
+        // Or if doubleDash is enabled, we only did one dash, and the cooldown duration has passed since then
+        else if (doubleDash && dashesUsed == 1 && Time.time - firstDashTime >= dashCooldown)
+        {
+            dashesUsed = 0;
+        }
+
+        if (controlsEnabled && dashAction.WasPressedThisFrame())
         {
             dashRequested = true;
         }
 
-        if (attackAction.WasPressedThisFrame())
+        if (controlsEnabled && attackAction.WasPressedThisFrame())
         {
             attackRequested = true;
             lastAttackInputTime = Time.time;
+        }
+
+        // Reset combo if the delay has exceeded since the last attack input
+        if (Time.time - lastAttackInputTime > comboResetDelay)
+        {
+            currentComboIndex = 0;
         }
 
         if (attackRequested && (Time.time - lastAttackInputTime > inputBufferWindow))
@@ -120,11 +149,11 @@ public class Player : MonoBehaviour, IDamageable
     {
         // Ignore collisions with enemies during active dash phase
         int enemyLayerIndex = GetLayerFromMask(enemyLayer);
-        bool isDashing = (Time.time - lastDashTime < dashDuration);
+        bool isDashing = (Time.time - lastDashTime < dashInvincibilityDuration);
         Physics.IgnoreLayerCollision(gameObject.layer, enemyLayerIndex, isDashing);
 
         #region movement
-        Vector2 moveValue = moveAction.ReadValue<Vector2>();
+        Vector2 moveValue = controlsEnabled ? moveAction.ReadValue<Vector2>() : Vector2.zero;
 
         Vector3 forward = mainCamera.forward;
         Vector3 right = mainCamera.right;
@@ -207,6 +236,18 @@ public class Player : MonoBehaviour, IDamageable
                 rb.linearVelocity = Vector3.zero;
                 rb.AddForce(dashDirection.normalized * dashForce, ForceMode.Impulse);
                 lastDashTime = Time.time;
+
+                dashesUsed++;
+                if (dashesUsed == 1)
+                {
+                    firstDashTime = Time.time;
+                }
+
+                int maxDashes = doubleDash ? 2 : 1;
+                if (dashesUsed >= maxDashes)
+                {
+                    cooldownStartTime = Time.time;
+                }
             }
         }
         #endregion
@@ -216,11 +257,6 @@ public class Player : MonoBehaviour, IDamageable
         {
             attackRequested = false; // Consume input
             if (normalAttackCombo == null || normalAttackCombo.Length == 0) return;
-
-            if (Time.time - lastAttackTime > comboResetDelay)
-            {
-                currentComboIndex = 0;
-            }
 
             // Auto-Targeting: Find best target in range
             Transform target = GetAutoTarget(moveInput);
@@ -375,7 +411,7 @@ public class Player : MonoBehaviour, IDamageable
 
     public void TakeDamage(DamageInfo damageInfo)
     {
-        bool isInvincible = (iframeTimer > 0f) || (Time.time - lastDashTime < dashDuration);
+        bool isInvincible = (iframeTimer > 0f) || (Time.time - lastDashTime < dashInvincibilityDuration);
         if (isInvincible) return; // Invincible!
 
         currentHealth -= damageInfo.damage;
@@ -409,9 +445,20 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
+    public void SetControlsEnabled(bool enabledState)
+    {
+        controlsEnabled = enabledState;
+        if (!enabledState)
+        {
+            dashRequested = false;
+            attackRequested = false;
+        }
+    }
+
     private void Die()
     {
         Debug.Log("Player has died!");
+        SetControlsEnabled(false);
         if (onDeath != null)
         {
             onDeath.Invoke();

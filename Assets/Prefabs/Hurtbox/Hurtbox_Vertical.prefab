@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7846664554246969426}
   - component: {fileID: 2313783775270980181}
   - component: {fileID: -2674349263418754960}
+  - component: {fileID: 2061355542941035445}
   m_Layer: 0
   m_Name: Hurtbox_Vertical
   m_TagString: Untagged
@@ -132,3 +133,30 @@ MonoBehaviour:
   targetMask:
     serializedVersion: 2
     m_Bits: 128
+--- !u!54 &2061355542941035445
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2805490160582678029}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

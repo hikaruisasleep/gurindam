@@ -11,37 +11,20 @@ public class PlayerDeathHandler : MonoBehaviour
     public GameObject deathUIOverlay;
 
     private Coroutine deathCoroutine;
+    private float defaultFixedDeltaTime;
 
     void Start()
     {
+        defaultFixedDeltaTime = Time.fixedDeltaTime;
+
         // Reset TimeScale to normal in case we reloaded the scene
         Time.timeScale = 1f;
-
-        // Auto-register to Player's onDeath UnityEvent
-        Player player = FindFirstObjectByType<Player>();
-        if (player != null)
-        {
-            player.onDeath.AddListener(OnPlayerDeath);
-        }
-        else
-        {
-            Debug.LogWarning("PlayerDeathHandler: Player not found in scene. Please link to Player.onDeath manually.");
-        }
+        Time.fixedDeltaTime = defaultFixedDeltaTime;
 
         // Keep the Game Over UI hidden initially
         if (deathUIOverlay != null)
         {
             deathUIOverlay.SetActive(false);
-        }
-    }
-
-    void OnDestroy()
-    {
-        // Clean up the event listener on destroy to prevent memory leaks
-        Player player = FindFirstObjectByType<Player>();
-        if (player != null)
-        {
-            player.onDeath.RemoveListener(OnPlayerDeath);
         }
     }
 
@@ -63,13 +46,26 @@ public class PlayerDeathHandler : MonoBehaviour
         // approaches 0, standard Time.deltaTime approaches 0 and would freeze this coroutine.
         while (elapsed < slowDownDuration)
         {
-            Time.timeScale = Mathf.Lerp(startScale, targetScale, elapsed / slowDownDuration);
+            float newScale = Mathf.Lerp(startScale, targetScale, elapsed / slowDownDuration);
+            Time.timeScale = newScale;
+
+            // Scale fixedDeltaTime proportionally, clamping to prevent CPU performance spikes
+            if (newScale > 0.01f)
+            {
+                Time.fixedDeltaTime = defaultFixedDeltaTime * newScale;
+            }
+            else
+            {
+                Time.fixedDeltaTime = defaultFixedDeltaTime * 0.01f;
+            }
+
             elapsed += Time.unscaledDeltaTime;
             yield return null;
         }
 
-        // Lock time scale to absolute zero
+        // Lock time scale to absolute zero and restore fixedDeltaTime
         Time.timeScale = 0f;
+        Time.fixedDeltaTime = defaultFixedDeltaTime;
 
         // Display the Game Over overlay
         if (deathUIOverlay != null)

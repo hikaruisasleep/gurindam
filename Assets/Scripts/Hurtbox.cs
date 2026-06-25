@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+
 [RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Rigidbody))]
 public class Hurtbox : MonoBehaviour
 {
     [Header("Damage Stats")]
@@ -15,6 +17,19 @@ public class Hurtbox : MonoBehaviour
     private Vector3 moveDirection;
     private GameObject attacker;
     private HashSet<IDamageable> hitTargets = new HashSet<IDamageable>();
+
+    private void Awake()
+    {
+        // Get or add Rigidbody at runtime to isolate collision events from the Player's Rigidbody
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody>();
+        }
+        rb.isKinematic = true;
+        rb.useGravity = false;
+    }
+
     // Call this immediately after instantiating to configure the hurtbox
     public void Initialize(GameObject attacker, Vector3 direction)
     {
