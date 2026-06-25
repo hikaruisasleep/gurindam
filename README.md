@@ -22,6 +22,10 @@ Combat focuses on ink-based mechanics and verbal incantations.
 The project is built on the Unity Engine using C# for all gameplay logic and systems. Visual assets are developed using Blender for 3D modeling, Aseprite for 2D textures, and Adobe Photoshop for post-processing and UI design. 
 
 ## Licensing
+
+![Code License](https://img.shields.io/github/license/hikaruisasleep/gurindam?style=for-the-badge&label=code))
+![Assets License](https://img.shields.io/badge/CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge&logo=creative-commons&label=assets)
+
 This project utilizes a split-license model to protect cultural and artistic assets while allowing the software architecture to remain open source.
 The codebase and C# scripts are licensed under the MIT License. See the `LICENSE` file for more details. 
 All visual assets, 3D models, audio, narrative lore, and character designs are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License. See the `LICENSE-ASSETS` file for more details.
