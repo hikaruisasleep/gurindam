@@ -27,5 +27,5 @@ The project is built on the Unity Engine using C# for all gameplay logic and sys
 [![Assets License](https://img.shields.io/badge/CC%20BY--NC--SA%204.0-lightgrey?style=for-the-badge&logo=creative-commons&logoColor=white&logoSize=auto&label=assets)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 This project utilizes a split-license model to protect cultural and artistic assets while allowing the software architecture to remain open source.
-The codebase and C# scripts are licensed under the MIT License. See the `LICENSE` file for more details. 
+The codebase and C# scripts are licensed under the GNU General Public License v3.0 (GNU GPLv3) License. See the `LICENSE` file for more details. 
 All visual assets, 3D models, audio, narrative lore, and character designs are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License. See the `LICENSE-ASSETS` file for more details.
