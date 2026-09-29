@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.unity.ai.navigation": "2.0.13",
+    "com.unity.animation.rigging": "1.4.1",
     "com.unity.cinemachine": "3.1.6",
     "com.unity.cloud.gltfast": "6.16.1",
     "com.unity.collab-proxy": "2.12.4",
@@ -12,7 +13,7 @@
     "com.unity.services.analytics": "6.3.0",
     "com.unity.test-framework": "1.6.0",
     "com.unity.timeline": "1.8.12",
-    "com.unity.toonshader": "0.15.0-preview",
+    "com.unity.toonshader": "0.15.1-preview",
     "com.unity.ugui": "2.0.0",
     "com.unity.visualscripting": "1.9.11",
     "com.unity.modules.accessibility": "1.0.0",
