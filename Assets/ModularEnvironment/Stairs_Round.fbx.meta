@@ -3,12 +3,7 @@ guid: c3d0fa78dac1f6844ab21b9b2a89ab99
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Stone_Stairs.001
-    second: {fileID: 2100000, guid: 53251b4f8793e9849baf2f4010363eff, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0

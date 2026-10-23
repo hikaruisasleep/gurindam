@@ -1,0 +1,56 @@
+[33mcommit ffc934d96b1fc9e7de4c931d794f76d321fedd67[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Danny kurniawan <139773951+danny15k@users.noreply.github.com>
+Date:   Wed Oct 21 22:48:52 2026 +0700
+
+    DungeonENV
+
+ .../CopilotIndices/17.14.1713.63837/CodeChunks.db  | Bin [31m0[m -> [32m155648[m bytes
+ .../17.14.1713.63837/SemanticSymbols.db            | Bin [31m0[m -> [32m90112[m bytes
+ .../11cc008e-8a15-4257-8c49-ee0262f52ad9.vsidx     | Bin [31m0[m -> [32m5797[m bytes
+ .../49e17363-3cea-480e-9ef9-c0ac91ba51f3.vsidx     | Bin [31m0[m -> [32m128781[m bytes
+ .vs/gurindam/v17/.suo                              | Bin [31m0[m -> [32m750592[m bytes
+ .vs/gurindam/v17/DocumentLayout.backup.json        |  89 [32m+++++[m
+ .vs/gurindam/v17/DocumentLayout.json               |  89 [32m+++++[m
+ Assembly-CSharp-Editor.csproj                      |  44 [32m++[m[31m-[m
+ Assembly-CSharp.csproj                             |  40 [32m+[m[31m-[m
+ Assets/ANIMATION/AnimationCINDAKU.blend1           | Bin [31m0[m -> [32m172329978[m bytes
+ Assets/ANIMATION/AnimationCINDAKU.blend1.meta      |   7 [32m+[m
+ Assets/GAJAH MINA/GAJAH MINA FIX FINAL.blend       | Bin [31m47232770[m -> [32m0[m bytes
+ Assets/GAJAH MINA/GAJAH MINA.fbx                   | Bin [31m0[m -> [32m2427708[m bytes
+ ...NA FIX FINAL.blend.meta => GAJAH MINA.fbx.meta} |   2 [32m+[m[31m-[m
+ Assets/GAJAH MINA/Materials/Material.001.mat       | 423 [32m++++++++++++++++++++[m[31m-[m
+ .../Materials/texture_pbr_20250901 - 1ST.png       | Bin [31m0[m -> [32m18623351[m bytes
+ .../Materials/texture_pbr_20250901 - 1ST.png.meta  | 130 [32m+++++++[m
+ Assets/MC_RAJA/Retargeting.controller              |  72 [32m++++[m
+ Assets/MC_RAJA/Retargeting.controller.meta         |   8 [32m+[m
+ .../Dungeon_environment/CLOSE DOOR ANIMATION.fbx   | Bin [31m0[m -> [32m5165804[m bytes
+ .../CLOSE DOOR ANIMATION.fbx.meta                  | 299 [32m+++++++++++++++[m
+ .../Dungeon_environment/OPEN DOOR ANIMATION.fbx    | Bin [31m0[m -> [32m12901884[m bytes
+ .../OPEN DOOR ANIMATION.fbx.meta                   | 135 [32m+++++++[m
+ .../dungeon_texture/door_baking_animation.png      | Bin [31m0[m -> [32m2680147[m bytes
+ .../dungeon_texture/door_baking_animation.png.meta | 130 [32m+++++++[m
+ .../dungeon_texture/door_dungeon_animation 1.mat   | 139 [32m+++++++[m
+ .../door_dungeon_animation 1.mat.meta              |   8 [32m+[m
+ .../dungeon_texture/door_dungeon_animation.mat     | 139 [32m+++++++[m
+ .../door_dungeon_animation.mat.meta                |   8 [32m+[m
+ .../dungeon_texture/door_dungeon_rock.001.mat      | 139 [32m+++++++[m
+ .../dungeon_texture/door_dungeon_rock.001.mat.meta |   8 [32m+[m
+ .../dungeon_texture/door_dungeon_rock.002.mat      | 139 [32m+++++++[m
+ .../dungeon_texture/door_dungeon_rock.002.mat.meta |   8 [32m+[m
+ .../dungeon_texture/door_dungeon_wood 1.mat        | 139 [32m+++++++[m
+ .../dungeon_texture/door_dungeon_wood 1.mat.meta   |   8 [32m+[m
+ .../dungeon_texture/door_dungeon_wood.mat          | 139 [32m+++++++[m
+ .../dungeon_texture/door_dungeon_wood.mat.meta     |   8 [32m+[m
+ .../dungeon_texture/door_light 1.mat               | 140 [32m+++++++[m
+ .../dungeon_texture/door_light 1.mat.meta          |   8 [32m+[m
+ .../dungeon_texture/door_light.mat                 | 140 [32m+++++++[m
+ .../dungeon_texture/door_light.mat.meta            |   8 [32m+[m
+ Assets/NAGA BUNIAN/Materials/Material.001.mat      | 399 [32m++++++++++++++++++[m[31m-[m
+ .../Materials/texture_pbr_20250901 - 1ST.png       | Bin [31m0[m -> [32m18267226[m bytes
+ .../Materials/texture_pbr_20250901 - 1ST.png.meta  | 130 [32m+++++++[m
+ Assets/NAGA BUNIAN/NAGA BUNIAN FIX FINAL.blend     | Bin [31m46711238[m -> [32m0[m bytes
+ Assets/NAGA BUNIAN/NAGA BUNIAN.fbx                 | Bin [31m0[m -> [32m2254428[m bytes
+ ...N FIX FINAL.blend.meta => NAGA BUNIAN.fbx.meta} |   2 [32m+[m[31m-[m
+ .../Assembly-CSharp.csproj.AssemblyReference.cache | Bin [31m0[m -> [32m159169[m bytes
+ .../DesignTimeResolveAssemblyReferencesInput.cache | Bin [31m0[m -> [32m38887[m bytes
+ 49 files changed, 3133 insertions(+), 44 deletions(-)

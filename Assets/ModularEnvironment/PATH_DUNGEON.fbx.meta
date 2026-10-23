@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d8229e255870522468ce2b843b8431ee
+guid: 5cba225804819884380123a39f91be45
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,8 +7,28 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.001
-    second: {fileID: 2100000, guid: 72aec5a298ef6c04aa91ae08595e4b98, type: 2}
+      name: gate_dungeon
+    second: {fileID: 2100000, guid: fae5d5f7f626d6c48891d9dec745aa1d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: keris_ornament
+    second: {fileID: 2100000, guid: ec0dd3939e326544aba6c72c7518b977, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: path__wall_dungeon
+    second: {fileID: 2100000, guid: d2b8b2f2397be7147875fa042fa4982d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: path_ground_dungeon
+    second: {fileID: 2100000, guid: ae8ff6c58ea083f4490f58407b96a578, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rock_path_dungeon
+    second: {fileID: 2100000, guid: fb2fc90e2aea066419af0d90cad37bc2, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

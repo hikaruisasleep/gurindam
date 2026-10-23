@@ -3,12 +3,7 @@ guid: 369e35f5801cc03478382c35eff006e1
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: PillarBroken
-    second: {fileID: 2100000, guid: c1b5c52d5d349f843a2612c81cee68ea, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
