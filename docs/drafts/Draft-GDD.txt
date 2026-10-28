@@ -1,0 +1,189 @@
+﻿GAME DESIGN DOCUMENT: THE ORIGIN OF GURINDAM
+1.  Project Overview
+* Game Title: The Origin of Gurindam.
+* Genre: Action Roguelite / Hack and Slash.
+* Platform: PC (Windows) with Controller Support.
+* Engine: Unity Engine.
+* Methodology: Game Development Life Cycle (GDLC).
+* Core Theme: Malay Cultural Preservation and Historic Fantasy.
+2. Story & Narrative
+* The Awakening at the Sanctuary 
+   * The Scholar emerges from the Ink Pool located in the center of the Sanctuary of the Pen. The Putri Tujuh, or Seven Princesses, immediately surround him to provide care. They offer tender support to the protagonist, as each failed journey leaves a deep scar upon his weary soul.
+* The Sacred Mission to the Gardens 
+   * The Scholar prepares to enter Castle to find and recover the shattered fragments of the Gurindam Dua Belas. In this world, the written word holds the fabric of reality together, and the loss of these verses has allowed a dark fog of forgetfulness to settle over the land. If the Scholar fails to retrieve the poetry, the history of his people will be completely erased.
+* The Encounter with the Weretiger 
+   * The Scholar battles through the overgrown thickets until he reaches the Burning Bridge. There, he faces Cindaku, a massive hybrid of man and tiger who serves as the first major gatekeeper. The beast moves with a speed that the Scholar’s current physical form cannot match. After a frantic exchange of strikes, Cindaku delivers a fatal blow with his glowing claws, and the Scholar feels his physical form dissolve into liquid ink to be absorbed by the earth.
+* The Wisdom of the Grand Advisor 
+   * The Scholar gasps as he reforms in the Sanctuary pool once again. Raja Ali Haji stands waiting by a massive stone lectern. The advisor explains that the Scholar relied too much on his eyes and not enough on his rhythm. He teaches the protagonist that a warrior must read an opponent like a well-structured stanza. The Scholar then approaches the Putri Tujuh to spend his gathered Heritage Points to grow stronger.
+* The Victory over the Beast 
+   * The Scholar returns to the Burning Bridge with renewed purpose. He anticipates Cindaku’s pounce and uses the Arbiter’s Brush to paint a binding seal beneath the tiger’s feet. The beast is defeated and dissolves into a shimmering essence that the Scholar absorbs into his brush. This victory unlocks the path to the Flooded Straits and provides the first recovered fragment of the lost manuscript.
+* The Revelation of the Flooded Straits 
+   * The Scholar enters the second region, where he encounters the Gajah Mina. The environment is now a mix of rising tides and the wreckage of colonial ghost ships. He realizes that the monsters are actually physical manifestations of the cultural heritage his people have forgotten. Every enemy he defeats releases a small spark of memory back into the world.
+* The Shadow of the Great Naga 
+   * The Scholar eventually reaches the Void of Forgetfulness, where the Naga resides. Naga has been totally consumed by the void, leaving its soul sealed deep within its body. The Naga is an overwhelming force of power that destroys the Scholar with dragon breath. The protagonist realizes that his current power is insufficient to even scratch the scales of such a massive concept.
+* The Infinite Loop of Preservation 
+   * The Scholar wakes up in the Sanctuary once more, where Raja Ali Haji reveals that the Naga can only be weakened if the Scholar completes the full twelve articles of the Gurindam. The Scholar understands that he must endure hundreds of journeys to save all the forgotten legends.
+
+
+
+________________
+   3. Characters and Enemies
+   1. The Protagonist: The Scholar
+   * Visuals: Traditional Baju Melayu with reinforced shoulder plating for combat.
+   * Weapons:
+   * Arbiter’s Brush: A heavy staff-brush used for sweeping ink-based melee strikes.
+   * Inscribed Gurindam: A mystical book and quill for casting chanted text as ranged projectiles.
+   * Weapons…
+   2. Enemy
+   * Toyol: Green small appearance with sharp nail used to attack player (look like goblin from west culture)
+   * Bandit: Human with Dao/Cutlass/Knife with Pirate-Bandana/Beannie
+   * Soldier/Knight: Human with mediaeval-chainmail-armour and gladius-sword
+   * Archer: Human with medieval-archer-outfit and bow
+   * Musketeer: Human with cuirass-armor and equipped with musket
+   * Sang Kelembai: Big humanoid creature with leaf covering most of it’s body, mainly cast curse spell to weaken player(Shaman Ogre+Dyrad with ogre being the dominant form)
+   * Cindaku: Mixes of tiger and human, Consist of claw attack and act as First Boss
+   * Gajah Mina: Humanoid figure with fish scale and elephant head, most of the scales are green color, have the power to attack with pressured water from its trunk. Act as Second Boss
+   * Naga: Naga.
+   4. World and Environment Design
+   * Main Hub: A safe zone featuring golden ink and ancient library aesthetics.
+   * Castle: Overgrown ruins where the first pages are found.
+   * Burning Bridge: A high-contrast environment (Orange/Grey) for the Cindaku duel.
+   * Floating Island: A lush, green forest biome with aquatic and cloud elements.
+   * Underwater Room: An end-game chamber featuring aqua palettes and underwater distortion effects.
+   * Dragon Lair
+   5. Core Loop
+   1. Combat: Active combat featuring light/heavy combos and a dash-dodge system.
+   2. Progression: Players will gain new skill for every few chambers cleared. Players need to defeat the boss to gain Heritage Points (Meta-currency) to gain permanent stat upgrades (HP, Attack) at the Hub.
+   3. Roguelite Elements: Randomized room rewards and lost all skill gained on dead.
+
+
+   6. Keybind:
+   * Movement: WASD/Left Joystick/DirectionalPad
+   * Attack: Left click mouse/Square(PS)/X(Xbox)
+   * Heavy Attack: Right click mouse/Triangle(PS)/Y(Xbox)
+   * Dash: Spacebar/Cross(PS)/A(Xbox)
+   * Skill Cast: "E"Key/R2 trigger
+   * Ultimate Cast: F/Circle(PS)/B(Xbox)
+   * Interact: Enter/Spacebar/"E"Key/R1 trigger
+   * Pause: Esc/Menu button
+________________
+REFERENCE PAGE
+Main Char:
+      * Male
+  
+
+ 
+
+
+Weapon:
+      * Arbiter’s Brush
+      * Inscribed Gurindam
+
+
+Enemy:
+      * Cindaku
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+      * Gajah Mina
+.
+      * Sang Kelembai
+  
+  
+
+
+
+ART
+      * MC (HAJI?)  
+
+
+
+
+
+
+
+
+
+
+
+
+         * BANDIT (NAME), rencana ganti bajunya dan face nya more villain  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            * GOBLIN/TOYOL  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+               * GAJAH MINA  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  * SANG KELEMBAI  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ASSET MODEL 
+
+
+                     * GOBLIN MODEL

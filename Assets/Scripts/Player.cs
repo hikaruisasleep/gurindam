@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour, IDamageable
 {
+    #region variable initialization
     InputAction moveAction;
     InputAction dashAction;
     InputAction attackAction;
@@ -52,6 +53,10 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] bool canDash = false;
     [SerializeField] private float dashCooldownTimer = 0f;
     private bool dashRequested = false;
+    [SerializeField] GameObject stepRayTop;
+    [SerializeField] GameObject stepRayBottom;
+    [SerializeField] float stepHeight = 0.4f;
+    [SerializeField] float stepSmooth = 2.5f;
 
     [Header("Double Dash Options")]
     public bool doubleDash = false;
@@ -104,6 +109,7 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     Transform mainCamera;
+    #endregion
 
     void Start()
     {
@@ -320,9 +326,12 @@ public class Player : MonoBehaviour, IDamageable
 
     void FixedUpdate()
     {
+        // Stick to the fucking floor
+        rb.AddForce(Physics.gravity * 5f, ForceMode.Acceleration);
+
         // Ignore collisions with enemies during active dash phase
         int enemyLayerIndex = GetLayerFromMask(enemyLayer);
-        bool isDashing = (Time.time - lastDashTime < dashInvincibilityDuration);
+        bool isDashing = Time.time - lastDashTime < dashInvincibilityDuration;
         Physics.IgnoreLayerCollision(gameObject.layer, enemyLayerIndex, isDashing);
 
         #region movement
@@ -335,7 +344,6 @@ public class Player : MonoBehaviour, IDamageable
 
         forward.Normalize();
         right.Normalize();
-
 
         Vector3 moveInput = (forward * moveValue.y) + (right * moveValue.x);
         float activeMaxSpeed = isAimingRanged ? (maxSpeed * rangedAimSpeedMultiplier) : maxSpeed;
@@ -395,6 +403,8 @@ public class Player : MonoBehaviour, IDamageable
         {
             transform.rotation = Quaternion.LookRotation(moveInput);
         }
+
+        climbSteps();
 
         Vector3 dashDirection = moveInput != Vector3.zero ? moveInput : transform.forward;
 
@@ -512,7 +522,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         // 1. Scan for all colliders in range
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, targetDetectionRadius, enemyLayer);
-        
+
         Transform bestTarget = null;
         float bestDistance = Mathf.Infinity;
 
@@ -738,4 +748,39 @@ public class Player : MonoBehaviour, IDamageable
         Debug.Log("Fired Ranged Attack (Inscribed Gurindam) towards: " + targetPosition);
     }
     #endregion
+
+    void climbSteps()
+    {
+        Debug.DrawRay(stepRayBottom.transform.position, new Vector3(0, 0, 3), Color.red);
+        Debug.DrawRay(stepRayTop.transform.position, new Vector3(0, 0, 2), Color.green);
+        RaycastHit hitBottom;
+        if (Physics.Raycast(stepRayBottom.transform.position, transform.TransformDirection(Vector3.forward), out hitBottom, 0.1f))
+        {
+            RaycastHit hitTop;
+            if (!Physics.Raycast(stepRayTop.transform.position, transform.TransformDirection(Vector3.forward), out hitTop, 0.15f))
+            {
+                rb.position -= new Vector3(0f, -stepSmooth * Time.deltaTime, 0f);
+            }
+        }
+
+        RaycastHit hitBottom45;
+        if (Physics.Raycast(stepRayBottom.transform.position, transform.TransformDirection(1.5f, 0, 1), out hitBottom45, 0.1f))
+        {
+            RaycastHit hitTop45;
+            if (!Physics.Raycast(stepRayTop.transform.position, transform.TransformDirection(1.5f, 0, 1), out hitTop45, 0.15f))
+            {
+                rb.position -= new Vector3(0f, -stepSmooth * Time.deltaTime, 0f);
+            }
+        }
+
+        RaycastHit hitBottom315;
+        if (Physics.Raycast(stepRayBottom.transform.position, transform.TransformDirection(-1.5f, 0, 1), out hitBottom315, 0.1f))
+        {
+            RaycastHit hitTop315;
+            if (!Physics.Raycast(stepRayTop.transform.position, transform.TransformDirection(-1.5f, 0, 1), out hitTop315, 0.15f))
+            {
+                rb.position -= new Vector3(0f, -stepSmooth * Time.deltaTime, 0f);
+            }
+        }
+    }
 }
