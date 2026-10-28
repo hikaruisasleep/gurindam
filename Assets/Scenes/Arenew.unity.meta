@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scenes/Arenew.unity.meta
 guid: 082b3a55329f34e40b5b496847d2ac51
+========
+guid: a7ec448705b63914aa5253e4f73d9b64
+>>>>>>>> 7dcd53a45adf57a123b4c7536149eeee988617bc:Assets/Scenes/Dungeon.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
