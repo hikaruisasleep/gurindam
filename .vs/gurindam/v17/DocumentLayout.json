@@ -1,25 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\00\\Unity\\gurindam\\",
+  "WorkspaceRootPath": "C:\\Users\\danny\\gurindam\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|d:\\00\\unity\\gurindam\\assets\\scripts\\enemyspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|C:\\Users\\danny\\gurindam\\assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|c:\\users\\danny\\gurindam\\assets\\scripts\\enemyspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\enemyspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\danny\\gurindam\\Library\\PackageCache\\com.unity.services.analytics@cde4e6cf92f9\\Runtime\\StdGenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\danny\\gurindam\\Library\\PackageCache\\com.unity.services.analytics@cde4e6cf92f9\\Runtime\\StdGenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Library\\PackageCache\\com.unity.services.analytics@cde4e6cf92f9\\Runtime\\StdGenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\00\\Unity\\gurindam\\Library\\PackageCache\\com.unity.render-pipelines.universal@4976252adeb8\\Shaders\\Lit.shader||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\danny\\gurindam\\Library\\PackageCache\\com.unity.render-pipelines.universal@4976252adeb8\\Shaders\\Lit.shader||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Library\\PackageCache\\com.unity.render-pipelines.universal@4976252adeb8\\Shaders\\Lit.shader||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|D:\\00\\Unity\\gurindam\\assets\\scenes\\toonshader.shader||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "AbsoluteMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|C:\\Users\\danny\\gurindam\\assets\\scenes\\toonshader.shader||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|solutionrelative:assets\\scenes\\toonshader.shader||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|D:\\00\\Unity\\gurindam\\assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -29,15 +30,19 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{56df62a4-05a3-4e5b-aa1a-99371ccfb997}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "EnemySpawner.cs",
-              "DocumentMoniker": "D:\\00\\Unity\\gurindam\\Assets\\Scripts\\EnemySpawner.cs",
+              "DocumentMoniker": "C:\\Users\\danny\\gurindam\\Assets\\Scripts\\EnemySpawner.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\EnemySpawner.cs",
-              "ToolTip": "D:\\00\\Unity\\gurindam\\Assets\\Scripts\\EnemySpawner.cs",
+              "ToolTip": "C:\\Users\\danny\\gurindam\\Assets\\Scripts\\EnemySpawner.cs",
               "RelativeToolTip": "Assets\\Scripts\\EnemySpawner.cs",
               "ViewState": "AgIAAAkBAAAAAAAAAAAAwBkBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -46,20 +51,22 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "StdGenerator.cs",
               "DocumentMoniker": "C:\\Users\\danny\\gurindam\\Library\\PackageCache\\com.unity.services.analytics@cde4e6cf92f9\\Runtime\\StdGenerator.cs",
+              "RelativeDocumentMoniker": "Library\\PackageCache\\com.unity.services.analytics@cde4e6cf92f9\\Runtime\\StdGenerator.cs",
               "ToolTip": "C:\\Users\\danny\\gurindam\\Library\\PackageCache\\com.unity.services.analytics@cde4e6cf92f9\\Runtime\\StdGenerator.cs",
+              "RelativeToolTip": "Library\\PackageCache\\com.unity.services.analytics@cde4e6cf92f9\\Runtime\\StdGenerator.cs",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-10-06T12:28:55.162Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Lit.shader",
-              "DocumentMoniker": "D:\\00\\Unity\\gurindam\\Library\\PackageCache\\com.unity.render-pipelines.universal@4976252adeb8\\Shaders\\Lit.shader",
+              "DocumentMoniker": "C:\\Users\\danny\\gurindam\\Library\\PackageCache\\com.unity.render-pipelines.universal@4976252adeb8\\Shaders\\Lit.shader",
               "RelativeDocumentMoniker": "Library\\PackageCache\\com.unity.render-pipelines.universal@4976252adeb8\\Shaders\\Lit.shader",
-              "ToolTip": "D:\\00\\Unity\\gurindam\\Library\\PackageCache\\com.unity.render-pipelines.universal@4976252adeb8\\Shaders\\Lit.shader",
+              "ToolTip": "C:\\Users\\danny\\gurindam\\Library\\PackageCache\\com.unity.render-pipelines.universal@4976252adeb8\\Shaders\\Lit.shader",
               "RelativeToolTip": "Library\\PackageCache\\com.unity.render-pipelines.universal@4976252adeb8\\Shaders\\Lit.shader",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002777|",
@@ -67,11 +74,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "ToonShader.shader",
-              "DocumentMoniker": "D:\\00\\Unity\\gurindam\\Assets\\Scenes\\ToonShader.shader",
+              "DocumentMoniker": "C:\\Users\\danny\\gurindam\\Assets\\Scenes\\ToonShader.shader",
               "RelativeDocumentMoniker": "Assets\\Scenes\\ToonShader.shader",
-              "ToolTip": "D:\\00\\Unity\\gurindam\\Assets\\Scenes\\ToonShader.shader",
+              "ToolTip": "C:\\Users\\danny\\gurindam\\Assets\\Scenes\\ToonShader.shader",
               "RelativeToolTip": "Assets\\Scenes\\ToonShader.shader",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002777|",
@@ -79,15 +86,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "Player.cs",
-              "DocumentMoniker": "D:\\00\\Unity\\gurindam\\Assets\\Scripts\\Player.cs",
+              "DocumentMoniker": "C:\\Users\\danny\\gurindam\\Assets\\Scripts\\Player.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Player.cs",
-              "ToolTip": "D:\\00\\Unity\\gurindam\\Assets\\Scripts\\Player.cs",
+              "ToolTip": "C:\\Users\\danny\\gurindam\\Assets\\Scripts\\Player.cs",
               "RelativeToolTip": "Assets\\Scripts\\Player.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABgCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-05T14:32:38.578Z"
+              "WhenOpened": "2026-08-05T14:32:38.578Z",
+              "EditorCaption": ""
             }
           ]
         }
