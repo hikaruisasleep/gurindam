@@ -525,12 +525,12 @@ ModelImporter:
       scale: {x: 0.016391566, y: 0.023630684, z: 0.05461875}
     - name: rig
       parentName: MC RAJA FINAL UNITY(Clone)
-      position: {x: -0, y: -1.15, z: 0}
+      position: {x: -0, y: -0.042, z: 0}
       rotation: {x: -0.7071068, y: 0.000000057601163, z: 0.000000057601163, w: 0.7071068}
       scale: {x: 100, y: 100, z: 100}
     - name: DEF-spine
       parentName: rig
-      position: {x: 0.0001, y: 0.0028, z: 0.0407}
+      position: {x: 0.0001, y: -0.00065, z: 0.01773}
       rotation: {x: 0.9155562, y: 0.00000004528047, z: 0.00000013095156, w: 0.40219018}
       scale: {x: 1, y: 0.9999998, z: 0.9999997}
     - name: DEF-pelvis.L
@@ -636,7 +636,7 @@ ModelImporter:
     - name: DEF-f_middle.01.L
       parentName: DEF-palm.02.L
       position: {x: -2.2817402e-10, y: 0.0007881619, z: -0.0000000018265564}
-      rotation: {x: 0.028746532, y: 0.99485457, z: 0.037194174, w: 0.089747414}
+      rotation: {x: 0.028746536, y: 0.99485457, z: 0.03719418, w: 0.089747414}
       scale: {x: 0.9999999, y: 1.0000006, z: 1.0000008}
     - name: DEF-f_middle.02.L
       parentName: DEF-f_middle.01.L
