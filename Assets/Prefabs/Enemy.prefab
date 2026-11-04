@@ -33,7 +33,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 202103538428629110}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7625717106621326903
@@ -91,7 +92,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &7655842832623791632
 BoxCollider:
@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   maxHealth: 30
+  currentHealth: 0
   contactDamage: 10
   modelRenderer: {fileID: 401014521309737779}
   hitColor: {r: 1, g: 0, b: 0, a: 1}
@@ -160,3 +161,77 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 4
   m_CollisionDetection: 0
+--- !u!1001 &379636512534181789
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 164604146717985518}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.71716
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.71716
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.71716
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.036
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.864
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.056011
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+      propertyPath: m_Name
+      value: GOBLIN TOYOL FINAL UNITY
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+--- !u!4 &202103538428629110 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b9be3fafdffd30a4db8e71c8f0c02c54, type: 3}
+  m_PrefabInstance: {fileID: 379636512534181789}
+  m_PrefabAsset: {fileID: 0}

@@ -53,10 +53,16 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] bool canDash = false;
     [SerializeField] private float dashCooldownTimer = 0f;
     private bool dashRequested = false;
-    [SerializeField] GameObject stepRayTop;
-    [SerializeField] GameObject stepRayBottom;
-    [SerializeField] float stepHeight = 0.4f;
-    [SerializeField] float stepSmooth = 2.5f;
+    [Header("Ground & Stair Suspension")]
+    [SerializeField] private bool autoAdjustCollider = true;
+    [SerializeField] private float stepClearance = 0.35f;
+    [SerializeField] private float rideHeight = 1.0f;
+    [SerializeField] private float suspensionStrength = 250f;
+    [SerializeField] private float suspensionDamper = 30f;
+    [SerializeField] private float probeRadius = 0.25f;
+    [SerializeField] private float maxStepDown = 0.4f;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] float airborneGravityMultiplier = 2f;
 
     [Header("Double Dash Options")]
     public bool doubleDash = false;
@@ -100,6 +106,56 @@ public class Player : MonoBehaviour, IDamageable
     // C# event for performance-friendly UI Slider binding
     public event System.Action<float, float> onHealthChanged;
 
+    [Header("Animation")]
+    public Animator animator;
+
+    [Header("Animation States")]
+    [SerializeField] private bool _isWalking = false;
+    [SerializeField] private bool _isDashing = false;
+    [SerializeField] private bool _isMeleeAttack1 = false;
+    [SerializeField] private bool _isMeleeAttack2 = false;
+    [SerializeField] private bool _isMeleeAttack3 = false;
+    [SerializeField] private bool _isChargingAttack = false;
+    [SerializeField] private bool _chargeAttackRelease = false;
+    [SerializeField] private int _meleeAttackStage = 0;
+
+    public bool isWalking { get => _isWalking; private set => _isWalking = value; }
+    public bool isDashing { get => _isDashing; private set => _isDashing = value; }
+    public bool isMeleeAttack1 { get => _isMeleeAttack1; private set => _isMeleeAttack1 = value; }
+    public bool isMeleeAttack2 { get => _isMeleeAttack2; private set => _isMeleeAttack2 = value; }
+    public bool isMeleeAttack3 { get => _isMeleeAttack3; private set => _isMeleeAttack3 = value; }
+    public bool isChargingAttack { get => _isChargingAttack; private set => _isChargingAttack = value; }
+    public bool chargeAttackRelease { get => _chargeAttackRelease; private set => _chargeAttackRelease = value; }
+    public int meleeAttackStage { get => _meleeAttackStage; private set => _meleeAttackStage = value; }
+    public bool isMeleeAttack => _isMeleeAttack1 || _isMeleeAttack2 || _isMeleeAttack3;
+
+    [Header("Animation Events")]
+    public UnityEngine.Events.UnityEvent<bool> onWalkingStateChanged;
+    public UnityEngine.Events.UnityEvent<bool> onDashingStateChanged;
+    public UnityEngine.Events.UnityEvent onDashStart;
+    public UnityEngine.Events.UnityEvent onMeleeAttack1;
+    public UnityEngine.Events.UnityEvent onMeleeAttack2;
+    public UnityEngine.Events.UnityEvent onMeleeAttack3;
+    public UnityEngine.Events.UnityEvent<int> onMeleeAttack;
+    public UnityEngine.Events.UnityEvent onMeleeAttackEnd;
+    public UnityEngine.Events.UnityEvent<bool> onChargingAttackStateChanged;
+    public UnityEngine.Events.UnityEvent onChargeAttackRelease;
+
+    private readonly System.Collections.Generic.HashSet<int> animatorParamHashes = new System.Collections.Generic.HashSet<int>();
+    static readonly int AnimIsWalking = Animator.StringToHash("isWalking");
+    static readonly int AnimIsDashing = Animator.StringToHash("isDashing");
+    static readonly int AnimDashTrigger = Animator.StringToHash("dash");
+    static readonly int AnimIsMeleeAttack = Animator.StringToHash("isMeleeAttack");
+    static readonly int AnimIsMeleeAttack1 = Animator.StringToHash("isMeleeAttack1");
+    static readonly int AnimIsMeleeAttack2 = Animator.StringToHash("isMeleeAttack2");
+    static readonly int AnimIsMeleeAttack3 = Animator.StringToHash("isMeleeAttack3");
+    static readonly int AnimMeleeAttack1 = Animator.StringToHash("meleeAttack1");
+    static readonly int AnimMeleeAttack2 = Animator.StringToHash("meleeAttack2");
+    static readonly int AnimMeleeAttack3 = Animator.StringToHash("meleeAttack3");
+    static readonly int AnimMeleeAttackStage = Animator.StringToHash("meleeAttackStage");
+    static readonly int AnimIsChargingAttack = Animator.StringToHash("isChargingAttack");
+    static readonly int AnimChargeAttackRelease = Animator.StringToHash("chargeAttackRelease");
+
     public float HealthPercent => (maxHealth > 0f) ? currentHealth / maxHealth : 0f;
 
     [System.Serializable]
@@ -139,6 +195,32 @@ public class Player : MonoBehaviour, IDamageable
         // hide aim line on game start
         aimLineRenderer.enabled = false;
         aimLineRenderer.positionCount = 0;
+
+        if (groundLayer.value == 0)
+        {
+            groundLayer = ~LayerMask.GetMask("Player", "Ignore Raycast");
+        }
+
+        CapsuleCollider col = GetComponent<CapsuleCollider>();
+        if (col != null && autoAdjustCollider)
+        {
+            // Elevate the bottom of the capsule collider by stepClearance, keeping head height identical.
+            // This ensures step risers and floor unevenness never physically collide with the capsule.
+            col.height = Mathf.Max(col.radius * 2f, col.height - stepClearance);
+            col.center += new Vector3(0f, stepClearance * 0.5f, 0f);
+        }
+
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
+        if (animator != null)
+        {
+            foreach (var p in animator.parameters)
+            {
+                animatorParamHashes.Add(p.nameHash);
+            }
+        }
     }
 
     void Update()
@@ -196,6 +278,13 @@ public class Player : MonoBehaviour, IDamageable
         {
             isAimingRanged = true;
             altAttackHoldStartTime = Time.time;
+            isChargingAttack = true;
+            chargeAttackRelease = false;
+            onChargingAttackStateChanged?.Invoke(true);
+            SetAnimBool(AnimIsChargingAttack, true);
+            SetAnimBool(AnimChargeAttackRelease, false);
+            ResetAnimTrigger(AnimChargeAttackRelease);
+
             if (aimLineRenderer != null)
             {
                 aimLineRenderer.positionCount = 2;
@@ -252,6 +341,13 @@ public class Player : MonoBehaviour, IDamageable
             if (!altAttackAction.IsPressed()) // Released
             {
                 isAimingRanged = false;
+                if (isChargingAttack)
+                {
+                    isChargingAttack = false;
+                    onChargingAttackStateChanged?.Invoke(false);
+                    SetAnimBool(AnimIsChargingAttack, false);
+                }
+
                 if (aimLineRenderer != null)
                 {
                     aimLineRenderer.enabled = false;
@@ -266,9 +362,16 @@ public class Player : MonoBehaviour, IDamageable
                 if (Time.time - altAttackHoldStartTime >= chargedAttackDuration)
                 {
                     FireRangedAttack(targetAimPos);
+                    chargeAttackRelease = true;
+                    onChargeAttackRelease?.Invoke();
+                    SetAnimTrigger(AnimChargeAttackRelease);
+                    SetAnimBool(AnimChargeAttackRelease, true);
                 }
                 else
                 {
+                    chargeAttackRelease = false;
+                    SetAnimBool(AnimChargeAttackRelease, false);
+                    ResetAnimTrigger(AnimChargeAttackRelease);
                     Debug.Log($"Ranged attack cancelled: charged for {Time.time - altAttackHoldStartTime:F2}s (minimum is {chargedAttackDuration}s).");
                 }
             }
@@ -326,13 +429,81 @@ public class Player : MonoBehaviour, IDamageable
 
     void FixedUpdate()
     {
-        // Stick to the fucking floor
-        rb.AddForce(Physics.gravity * 5f, ForceMode.Acceleration);
+        // Ride-Height Virtual Spring Suspension (Stairs & Ground Hugging)
+        Vector3 horizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        float speed = horizontalVel.magnitude;
+        float lookaheadDist = Mathf.Min(speed * Time.fixedDeltaTime, 0.4f);
+        Vector3 forwardOffset = speed > 0.1f ? horizontalVel.normalized * lookaheadDist : Vector3.zero;
+        Vector3 probeOrigin = transform.position + forwardOffset;
+
+        float targetDist = rideHeight - probeRadius;
+        // Scale maximum downward reach dynamically with horizontal speed so fast movement down slopes/stairs stays grounded
+        float dynamicStepDown = maxStepDown + speed * Time.fixedDeltaTime * 1.5f;
+        float maxDist = targetDist + dynamicStepDown;
+
+        bool isGrounded = Physics.SphereCast(
+            probeOrigin, probeRadius, Vector3.down, out RaycastHit groundHit,
+            maxDist, groundLayer, QueryTriggerInteraction.Ignore);
+
+        bool isDashActive = Time.time - lastDashTime < dashInvincibilityDuration;
+
+        if (isGrounded)
+        {
+            float currentDist = groundHit.distance > 0f ? groundHit.distance : 0f;
+            float error = targetDist - currentDist;
+            float vy = rb.linearVelocity.y;
+
+            // Critically damped spring force + gravity compensation to prevent sag
+            float springForce = (error * suspensionStrength) - (vy * suspensionDamper) - Physics.gravity.y;
+            rb.AddForce(Vector3.up * springForce, ForceMode.Acceleration);
+
+            // Step/stair assists: only active when moving horizontally
+            if (speed > 0.5f)
+            {
+                if (error > 0.02f)
+                {
+                    // Ascending: lift capsule to glide over upcoming step/slope
+                    float neededClimbVy = error / Time.fixedDeltaTime;
+                    if (rb.linearVelocity.y < neededClimbVy)
+                    {
+                        rb.linearVelocity = new Vector3(rb.linearVelocity.x, neededClimbVy, rb.linearVelocity.z);
+                    }
+                }
+                else if (error < -0.06f)
+                {
+                    // Descending: smoothly pull downward to hug descending slope/stairs and eliminate coyote time
+                    float neededDescendVy = Mathf.Clamp(error / (Time.fixedDeltaTime * 1.5f), -35f, 0f);
+                    if (rb.linearVelocity.y > neededDescendVy)
+                    {
+                        rb.linearVelocity = new Vector3(rb.linearVelocity.x, neededDescendVy, rb.linearVelocity.z);
+                    }
+                }
+            }
+
+            // Once at or above ride height during a dash, suppress upward velocity so slope impacts cannot launch
+            if (isDashActive && error <= 0f && rb.linearVelocity.y > 0f)
+            {
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            }
+        }
+        else
+        {
+            if (airborneGravityMultiplier > 1f)
+            {
+                // Extra gravity when genuinely airborne for snappy, responsive falls
+                rb.AddForce(Physics.gravity * (airborneGravityMultiplier - 1f), ForceMode.Acceleration);
+            }
+
+            // If airborne during a dash, suppress any upward launch velocity
+            if (isDashActive && rb.linearVelocity.y > 0f)
+            {
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            }
+        }
 
         // Ignore collisions with enemies during active dash phase
         int enemyLayerIndex = GetLayerFromMask(enemyLayer);
-        bool isDashing = Time.time - lastDashTime < dashInvincibilityDuration;
-        Physics.IgnoreLayerCollision(gameObject.layer, enemyLayerIndex, isDashing);
+        Physics.IgnoreLayerCollision(gameObject.layer, enemyLayerIndex, isDashActive);
 
         #region movement
         Vector2 moveValue = controlsEnabled ? moveAction.ReadValue<Vector2>() : Vector2.zero;
@@ -404,11 +575,26 @@ public class Player : MonoBehaviour, IDamageable
             transform.rotation = Quaternion.LookRotation(moveInput);
         }
 
-        climbSteps();
-
         Vector3 dashDirection = moveInput != Vector3.zero ? moveInput : transform.forward;
 
         isMoving = (moveInput.sqrMagnitude > 0.01f) || (currentHorizontalVelocity.sqrMagnitude > 0.005f);
+
+        bool dashingNow = Time.time - lastDashTime < dashInvincibilityDuration;
+        bool walkingNow = isMoving && !dashingNow;
+
+        if (walkingNow != isWalking)
+        {
+            isWalking = walkingNow;
+            onWalkingStateChanged?.Invoke(isWalking);
+            SetAnimBool(AnimIsWalking, isWalking);
+        }
+
+        if (dashingNow != isDashing)
+        {
+            isDashing = dashingNow;
+            onDashingStateChanged?.Invoke(isDashing);
+            SetAnimBool(AnimIsDashing, isDashing);
+        }
 
         canDash = (dashCooldownTimer <= 0f) && isMoving;
 
@@ -422,6 +608,17 @@ public class Player : MonoBehaviour, IDamageable
                 if (isAimingRanged)
                 {
                     isAimingRanged = false;
+                    chargeAttackRelease = false;
+                    SetAnimBool(AnimChargeAttackRelease, false);
+                    ResetAnimTrigger(AnimChargeAttackRelease);
+
+                    if (isChargingAttack)
+                    {
+                        isChargingAttack = false;
+                        onChargingAttackStateChanged?.Invoke(false);
+                        SetAnimBool(AnimIsChargingAttack, false);
+                    }
+
                     if (aimLineRenderer != null)
                     {
                         aimLineRenderer.enabled = false;
@@ -438,6 +635,8 @@ public class Player : MonoBehaviour, IDamageable
                 rb.linearVelocity = Vector3.zero;
                 rb.AddForce(dashDirection.normalized * dashForce, ForceMode.Impulse);
                 lastDashTime = Time.time;
+                onDashStart?.Invoke();
+                SetAnimTrigger(AnimDashTrigger);
 
                 dashesUsed++;
                 if (dashesUsed == 1)
@@ -455,10 +654,42 @@ public class Player : MonoBehaviour, IDamageable
         #endregion
 
         #region attacking
+        if (activeHurtbox == null && meleeAttackStage != 0)
+        {
+            meleeAttackStage = 0;
+            isMeleeAttack1 = false;
+            isMeleeAttack2 = false;
+            isMeleeAttack3 = false;
+            onMeleeAttackEnd?.Invoke();
+            SetAnimBool(AnimIsMeleeAttack, false);
+            SetAnimBool(AnimIsMeleeAttack1, false);
+            SetAnimBool(AnimIsMeleeAttack2, false);
+            SetAnimBool(AnimIsMeleeAttack3, false);
+            SetAnimInt(AnimMeleeAttackStage, 0);
+        }
+
         if (attackRequested && activeHurtbox == null)
         {
             attackRequested = false; // Consume input
             if (normalAttackCombo == null || normalAttackCombo.Length == 0) return;
+
+            int attackStage = currentComboIndex + 1; // 1, 2, or 3
+            meleeAttackStage = attackStage;
+            isMeleeAttack1 = (attackStage == 1);
+            isMeleeAttack2 = (attackStage == 2);
+            isMeleeAttack3 = (attackStage == 3);
+
+            onMeleeAttack?.Invoke(attackStage);
+            if (attackStage == 1) onMeleeAttack1?.Invoke();
+            else if (attackStage == 2) onMeleeAttack2?.Invoke();
+            else if (attackStage == 3) onMeleeAttack3?.Invoke();
+
+            SetAnimBool(AnimIsMeleeAttack, true);
+            SetAnimBool(AnimIsMeleeAttack1, isMeleeAttack1);
+            SetAnimBool(AnimIsMeleeAttack2, isMeleeAttack2);
+            SetAnimBool(AnimIsMeleeAttack3, isMeleeAttack3);
+            SetAnimInt(AnimMeleeAttackStage, meleeAttackStage);
+            SetAnimTrigger(attackStage == 1 ? AnimMeleeAttack1 : (attackStage == 2 ? AnimMeleeAttack2 : AnimMeleeAttack3));
 
             // Auto-Targeting: Find best target in range
             Transform target = GetAutoTarget(moveInput);
@@ -749,38 +980,42 @@ public class Player : MonoBehaviour, IDamageable
     }
     #endregion
 
-    void climbSteps()
+    void LateUpdate()
     {
-        Debug.DrawRay(stepRayBottom.transform.position, new Vector3(0, 0, 3), Color.red);
-        Debug.DrawRay(stepRayTop.transform.position, new Vector3(0, 0, 2), Color.green);
-        RaycastHit hitBottom;
-        if (Physics.Raycast(stepRayBottom.transform.position, transform.TransformDirection(Vector3.forward), out hitBottom, 0.1f))
-        {
-            RaycastHit hitTop;
-            if (!Physics.Raycast(stepRayTop.transform.position, transform.TransformDirection(Vector3.forward), out hitTop, 0.15f))
-            {
-                rb.position -= new Vector3(0f, -stepSmooth * Time.deltaTime, 0f);
-            }
-        }
+        // Reset single-frame triggers
+        chargeAttackRelease = false;
+        SetAnimBool(AnimChargeAttackRelease, false);
+    }
 
-        RaycastHit hitBottom45;
-        if (Physics.Raycast(stepRayBottom.transform.position, transform.TransformDirection(1.5f, 0, 1), out hitBottom45, 0.1f))
+    private void SetAnimBool(int hash, bool value)
+    {
+        if (animator != null && animatorParamHashes.Contains(hash))
         {
-            RaycastHit hitTop45;
-            if (!Physics.Raycast(stepRayTop.transform.position, transform.TransformDirection(1.5f, 0, 1), out hitTop45, 0.15f))
-            {
-                rb.position -= new Vector3(0f, -stepSmooth * Time.deltaTime, 0f);
-            }
+            animator.SetBool(hash, value);
         }
+    }
 
-        RaycastHit hitBottom315;
-        if (Physics.Raycast(stepRayBottom.transform.position, transform.TransformDirection(-1.5f, 0, 1), out hitBottom315, 0.1f))
+    private void SetAnimTrigger(int hash)
+    {
+        if (animator != null && animatorParamHashes.Contains(hash))
         {
-            RaycastHit hitTop315;
-            if (!Physics.Raycast(stepRayTop.transform.position, transform.TransformDirection(-1.5f, 0, 1), out hitTop315, 0.15f))
-            {
-                rb.position -= new Vector3(0f, -stepSmooth * Time.deltaTime, 0f);
-            }
+            animator.SetTrigger(hash);
+        }
+    }
+
+    private void ResetAnimTrigger(int hash)
+    {
+        if (animator != null && animatorParamHashes.Contains(hash))
+        {
+            animator.ResetTrigger(hash);
+        }
+    }
+
+    private void SetAnimInt(int hash, int value)
+    {
+        if (animator != null && animatorParamHashes.Contains(hash))
+        {
+            animator.SetInteger(hash, value);
         }
     }
 }
