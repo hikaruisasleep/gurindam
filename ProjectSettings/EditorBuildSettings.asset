@@ -8,6 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Arena.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Arenew.unity
+    guid: 082b3a55329f34e40b5b496847d2ac51
+  - enabled: 1
+    path: Assets/Scenes/Dungeon/Dungeon 1.unity
+    guid: a7ec448705b63914aa5253e4f73d9b64
   m_configObjects:
     com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: 1a04ca5eb033754419475c1ea337cb37, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 5e04d82ab7ead8845bc6865408296e5e, type: 2}

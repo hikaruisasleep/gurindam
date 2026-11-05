@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3497411899100270444
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2175144888685538100}
+  - component: {fileID: 253525894997751942}
+  - component: {fileID: 3724162408278175408}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2175144888685538100
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3497411899100270444}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &253525894997751942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3497411899100270444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4912337d03ebe54c88379b2b631fa9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  playerXf: {fileID: 0}
+  waves:
+  - waveName: wave 1 arc 6
+    enemyPrefab: {fileID: 3271077425212966326, guid: a7577a650007a064887de78758267305, type: 3}
+    enemyCount: 6
+    spawnDelaySeconds: 0
+    pattern: 1
+    circleRadius: 10
+    arcAngle: 120
+    crossDistance: 0
+  - waveName: wave 2 circ 8 delay
+    enemyPrefab: {fileID: 3271077425212966326, guid: a7577a650007a064887de78758267305, type: 3}
+    enemyCount: 8
+    spawnDelaySeconds: 0.1
+    pattern: 0
+    circleRadius: 10
+    arcAngle: 0
+    crossDistance: 0
+  - waveName: wave 3 arc 7
+    enemyPrefab: {fileID: 3271077425212966326, guid: a7577a650007a064887de78758267305, type: 3}
+    enemyCount: 7
+    spawnDelaySeconds: 0
+    pattern: 1
+    circleRadius: 12
+    arcAngle: 200
+    crossDistance: 0
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 65536
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 32768
+  minSpawnRadius: 4
+  enemySpawnRadius: 0.5
+  maxGroundRayDistance: 10
+  useNavMeshValidation: 0
+  minSecondsBetweenWaves: 2
+--- !u!114 &3724162408278175408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3497411899100270444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bbf2e3b654990642b3bf1e8f238f1f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDeathHandler
+  slowDownDuration: 1.5
+  deathUIOverlay: {fileID: 0}

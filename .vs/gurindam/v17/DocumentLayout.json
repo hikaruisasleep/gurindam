@@ -1,10 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\danny\\gurindam\\",
+  "WorkspaceRootPath": "D:\\00\\Unity\\Gurindam\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|c:\\users\\danny\\gurindam\\assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CD18C522-5D4B-2A0A-B3BA-316820A5EE3E}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6105091E-FDC6-C097-BBE2-C5032F14E1A3}|Assembly-CSharp.csproj|d:\\00\\unity\\gurindam\\assets\\scripts\\enemyspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6105091E-FDC6-C097-BBE2-C5032F14E1A3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\enemyspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6105091E-FDC6-C097-BBE2-C5032F14E1A3}|Assembly-CSharp.csproj|D:\\00\\Unity\\Gurindam\\assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6105091E-FDC6-C097-BBE2-C5032F14E1A3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6105091E-FDC6-C097-BBE2-C5032F14E1A3}|Assembly-CSharp.csproj|D:\\00\\Unity\\Gurindam\\assets\\scripts\\dungeonteleporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6105091E-FDC6-C097-BBE2-C5032F14E1A3}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\dungeonteleporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,15 +27,39 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Player.cs",
-              "DocumentMoniker": "C:\\Users\\danny\\gurindam\\Assets\\Scripts\\Player.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Player.cs",
-              "ToolTip": "C:\\Users\\danny\\gurindam\\Assets\\Scripts\\Player.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Player.cs",
-              "ViewState": "AgIAAAYBAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
+              "Title": "EnemySpawner.cs",
+              "DocumentMoniker": "D:\\00\\Unity\\Gurindam\\Assets\\Scripts\\EnemySpawner.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\EnemySpawner.cs",
+              "ToolTip": "D:\\00\\Unity\\Gurindam\\Assets\\Scripts\\EnemySpawner.cs",
+              "RelativeToolTip": "Assets\\Scripts\\EnemySpawner.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAAACYAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-05T14:32:38.578Z",
+              "WhenOpened": "2026-11-05T14:51:21.857Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DungeonTeleporter.cs",
+              "DocumentMoniker": "D:\\00\\Unity\\Gurindam\\Assets\\Scripts\\DungeonTeleporter.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\DungeonTeleporter.cs",
+              "ToolTip": "D:\\00\\Unity\\Gurindam\\Assets\\Scripts\\DungeonTeleporter.cs",
+              "RelativeToolTip": "Assets\\Scripts\\DungeonTeleporter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-05T13:00:28.249Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Player.cs",
+              "DocumentMoniker": "D:\\00\\Unity\\Gurindam\\Assets\\Scripts\\Player.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Player.cs",
+              "ToolTip": "D:\\00\\Unity\\Gurindam\\Assets\\Scripts\\Player.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Player.cs",
+              "ViewState": "AgIAAOkBAAAAAAAAAAAYwPwBAABZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-05T14:32:38.578Z"
             }
           ]
         }
