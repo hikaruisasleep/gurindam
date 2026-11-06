@@ -34,6 +34,19 @@ Treat this section as the source of truth for "what the project looks like today
 
 **Ignored locally, never synced:** `Library/`, `Temp/`, `obj/`, `Logs/`, `UserSettings/`, `MemoryCaptures/`, `Recordings/`, `.vs/`, `.vscode/`, `.idea/`, `*.csproj`, `*.sln`, `*.slnx`, `*.suo`, `*.user`, Blender backups (`*.blend1`, `*.blend2`), OS junk, and build outputs. Unity and your editor recreate these on demand.
 
+### 1.2 Work Hierarchy & Ownership
+
+Authority runs top to bottom. When layers disagree, the higher layer wins and the agent adapts.
+
+1. **User edits (highest authority).** Anything the user changes by hand in the Unity Editor, an IDE, or externally is authoritative. Never revert, reformat, overwrite, or "clean up" user edits. If your change would conflict with them, stop and ask; if the user has an uncommitted change, design around it.
+2. **Unity auto-generated state (middle).** Unity owns `Library/`, `Temp/`, `obj/`, `Logs/`, `Gurindam.slnx`, `*.csproj`, imported artifacts, and the `.meta` files it creates for assets. Treat this layer as read-only: never hand-edit generated files, never fight the Editor's serialization, and never commit generated output. `.meta` files are Unity-generated but **versioned** — commit them with their asset; never hand-edit a GUID or delete a `.meta` to force a reimport.
+3. **Agent changes (lowest authority).** Source code, scenes/prefabs edited through Unity, configuration, and documentation. The agent may modify this layer only, and only in ways that respect the two layers above. If fulfilling a request would require overriding a user edit or fabricating Unity-generated state, report the conflict instead.
+
+Practical consequences:
+- Prefer letting Unity regenerate project files over patching them yourself.
+- Do not re-serialize scenes/prefabs the user did not ask you to touch.
+- An agent's "fix" must never silently discard user intent; confirm before touching uncommitted user work.
+
 ---
 
 ## 2. Repository Layout
@@ -167,6 +180,19 @@ Every non-trivial feature or refactor traverses these stages.
 - Unity rewrites the solution (`Gurindam.slnx`), `*.csproj`, `Library/`, `obj/`, `Temp/`, and `Logs/` whenever it opens or compiles.
 - These are ignored and must never be committed or manually "cleaned" while Unity is running; if you need to remove local caches, close the Editor first.
 
+### Build & Compilation
+
+**Unity is the only build system.** Script compilation, asset import, shader compilation, and player builds all happen through the Unity Editor (or a Unity build script the user explicitly asked you to run).
+
+Agents must not:
+- run `dotnet build`, `dotnet restore`, `dotnet test`, `msbuild`, `csc`, `xbuild`, `nuget restore`, or IDE build commands;
+- compile `Assembly-CSharp` or the generated `.csproj` files outside Unity;
+- invoke the Unity editor in `-batchmode`/`-executeMethod` for a build unless the user explicitly requests a build.
+
+Rationale: the generated `.csproj`/`.slnx` are Unity outputs and are ignored; building them outside Unity can produce results that do not match the Editor's assembly definitions, package versions, or scripting define symbols.
+
+When a compile check is needed, ask the user to compile/open the project in Unity, or rely on the Editor's own compile and report what the Console shows. Never claim a build passed based on a non-Unity compiler. If the user explicitly asks for a specific build command, run exactly that command and report its real output.
+
 ---
 
 ## 6. Domain-Specific Edge Cases to Guard
@@ -186,6 +212,7 @@ Every change to gameplay, enemy behavior, or progression must explicitly account
 - **PlayMode Tests:** Required for component integration (spawner cycles, hurtbox collisions, death-ink trigger).
 - **Verification Rule:** Never claim a test, compile check, or inspector validation passed unless it was actually executed. If a check cannot be run in this environment, report it under **Manual Verification Required**.
 - **Current gap:** the project has no test assemblies yet. Adding the first EditMode assembly is a valid standalone task; until then, verification means an Editor compile with a clean Console plus the specific manual checks listed in the report.
+- **Builds run in Unity only:** compile checks and player builds go through the Unity Editor. Do not substitute `dotnet build`, `msbuild`, or a test runner launched outside Unity (see §5, Build & Compilation).
 
 ---
 
@@ -235,7 +262,7 @@ Rules:
 - Do not batch unrelated changes into one commit.
 - Do not leave a session with uncommitted changes unless the user explicitly asks to stop.
 - If a task is intentionally incomplete, commit the working increment and report the remaining work.
-- Run the relevant Unity compile/tests before committing when practical.
+- Run the relevant Unity compile/tests in the Editor before committing when practical (never `dotnet build`/`msbuild`; see §5).
 - Never claim a successful build or test without actually running it.
 
 ### 8.3 Commit hygiene
@@ -301,4 +328,5 @@ At the end of each milestone, report:
 - **Preserve Uncommitted Work:** Always verify `git status` before beginning work. Never overwrite or discard existing user modifications.
 - **Atomic Commits:** Keep C# code, `.meta` files, and the assets/scenes they depend on in a clean, buildable state in the same commit.
 - **No silent history rewriting:** rebases, amends of pushed commits, and force-pushes require explicit user approval.
+- **Unity builds only:** never run `dotnet build`, `dotnet test`, `msbuild`, `csc`, or an IDE build unless the user explicitly asks for that exact command; Unity owns compilation and builds (§5).
 - **Report rather than guess:** if a Git operation would discard or rewrite someone else's work, stop and ask.
