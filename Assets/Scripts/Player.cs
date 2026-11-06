@@ -84,6 +84,7 @@ public class Player : MonoBehaviour, IDamageable
     [Header("Auto-Targeting")]
     public float targetDetectionRadius = 25f;
     public LayerMask enemyLayer;
+    public LayerMask ObjectPhasingLayer;
     [Range(0f, 1f)]
     public float targetConeThreshold = 0f;
     public float targetDistanceTolerance = 2.0f;
@@ -503,7 +504,9 @@ public class Player : MonoBehaviour, IDamageable
 
         // Ignore collisions with enemies during active dash phase
         int enemyLayerIndex = GetLayerFromMask(enemyLayer);
+        int ObjectPhasingIndex = GetLayerFromMask(ObjectPhasingLayer);
         Physics.IgnoreLayerCollision(gameObject.layer, enemyLayerIndex, isDashActive);
+        Physics.IgnoreLayerCollision(gameObject.layer, ObjectPhasingIndex, isDashActive);
 
         #region movement
         Vector2 moveValue = controlsEnabled ? moveAction.ReadValue<Vector2>() : Vector2.zero;
