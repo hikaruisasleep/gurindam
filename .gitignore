@@ -1,10 +1,61 @@
-Library/  
-Temp/  
-Logs/  
-UserSettings/  
-*.blend1 
-*.blend2 
+# ------------------------------------------------------------------
+# Unity generated (never sync)
+# ------------------------------------------------------------------
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
 
+# Unity crash / debug artifacts
+sysinfo.txt
+crashlytics-build.properties
+*.stackdump
+
+# ------------------------------------------------------------------
+# IDE / code editor generated files
+# ------------------------------------------------------------------
 .vs/
-obj/
+.idea/
+.vscode/
 *.csproj
+*.sln
+*.slnx
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.opendb
+*.VC.db
+*.VC.opendb
+
+# ------------------------------------------------------------------
+# OS junk
+# ------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ------------------------------------------------------------------
+# Blender backups and temporary files
+# ------------------------------------------------------------------
+*.blend1
+*.blend2
+*.blend1.meta
+*.blend2.meta
+*.tmp
+*.bak
+
+# ------------------------------------------------------------------
+# Build outputs
+# ------------------------------------------------------------------
+*.apk
+*.aab
+*.app
+*.ipa
