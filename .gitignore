@@ -4,3 +4,7 @@ Logs/
 UserSettings/  
 *.blend1 
 *.blend2 
+
+.vs/
+obj/
+*.csproj
