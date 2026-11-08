@@ -24,7 +24,7 @@ Treat this section as the source of truth for "what the project looks like today
 | Repository size | ~1.2 GB packed; the working tree is larger because of LFS assets and `Library/` |
 | Tracked files | ~1,663 (after generated IDE/build files were untracked) |
 | CI / automated tests | None yet. No EditMode or PlayMode test assemblies exist; do not claim tests passed unless you actually ran them in the Editor |
-| Vendor content | `Assets/Z` (Polytope Studio environment, ~1 GB) and `Assets/Hovl Studio` (VFX pack, ~68 MB) are intentionally synced; do not delete them as "cleanup" |
+| Vendor content | `Assets/ThirdParty/PolytopeStudio` and `Assets/ThirdParty/HovlStudio` are intentionally synced; do not delete them as "cleanup" |
 
 **Project scenes** under `Assets/Scenes/`: `Arena.unity`, `Arenew.unity`, `Areold.unity`, `Dungeon/Dungeon 1–5.unity`, `Dungeon/Dungeon Boss.unity`. `Arena.unity` is the only scene currently enabled in `ProjectSettings/EditorBuildSettings.asset`.
 
@@ -61,14 +61,17 @@ Gurindam/
 ├── .gitattributes            # Git LFS rules (*.fbx, *.blend, *.png)
 ├── .vsconfig                 # shared Visual Studio workload config (tracked)
 ├── Assets/
-│   ├── Scripts/              # gameplay C# (see 1.1)
-│   ├── Scenes/               # Arena, Arenew, Areold, Dungeon/*
+│   ├── Art/
+│   │   ├── Characters/       # player, NPC, and enemy models (MC_RAJA, CINDAKU, PUTRI, ...)
+│   │   └── Environment/      # ModularEnvironment, Dungeons/*, terrain
+│   ├── Animations/           # imported FBX animation packs
+│   ├── Materials/            # shared materials
 │   ├── Prefabs/
-│   ├── MC_RAJA/              # player model, controller, animations
-│   ├── ANIMATION/            # imported FBX animation packs
-│   ├── ModularEnvironment/   # dungeon environment assets
-│   ├── Z/                    # vendor: Polytope Studio (tracked content)
-│   └── Hovl Studio/          # vendor: VFX pack (tracked content)
+│   ├── Scenes/               # Arena, Anew, Areold, Dungeon/*
+│   ├── Scripts/              # gameplay C# (see 1.1)
+│   ├── Settings/             # URP + input settings
+│   ├── Shaders/
+│   └── ThirdParty/           # PolytopeStudio, HovlStudio, TextMeshPro (tracked content)
 ├── Packages/                 # Unity package manifest
 ├── ProjectSettings/          # Unity project settings
 └── docs/drafts/              # GDD, paper, roadmap
