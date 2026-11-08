@@ -11,6 +11,9 @@
 [Mm]emoryCaptures/
 [Rr]ecordings/
 
+# Local recovery backups (not part of the project)
+_preserved/
+
 # Unity crash / debug artifacts
 sysinfo.txt
 crashlytics-build.properties
